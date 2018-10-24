@@ -2,8 +2,10 @@
 
 # Windows 10 Environment
 # pythonEXE="/mnt/c/Users/superpb9/AppData/Local/Programs/Python/Python37/python.exe"
-#PROJECT_PATH="/Users/pippo-mbp2016/Documents/myProject/mysoc/"
-PROJECT_PATH="/mnt/c/Users/superpb9/iCloudDrive/Documents/myProject/mysoc/"
+# PROJECT_PATH="/mnt/c/Users/superpb9/iCloudDrive/Documents/myProject/mysoc/"
+
+# Mac OSX Environment
+PROJECT_PATH="/Users/pippo-mbp2016/mysoc_clone"
 
 # Define a usage() function
 usage (){
@@ -31,21 +33,28 @@ done
 # e.g. OPTIND will become '7' after [./superpb9.sh -i 8.8.8.8 -d www.google.com -s 200012]
 shift "$(( OPTIND - 1 ))"
 
-# Domain Format check using regex
-echo "You've asked to check IP: ${IP_RECEIVED}"
-# Domain Format check using regex
-echo "You've asked to check Domain: ${DOMAIN_RECEIVED}"
+if [[ "${IP_REP_CHECK}" = true ]]
+then
+    echo "[+] Now calling 'ipReputation.py' to check ${IP_RECEIVED} ..."
+    # Note: Python will do the IPv4 Validation
+    CMDLINE_STR="python3 -u ${PROJECT_PATH}/ipReputation/ipReputation.py ${IP_RECEIVED}"
+    OUTPUT=$(eval "$CMDLINE_STR")
+    echo "${OUTPUT}"
+    echo ""
+fi
+
+if [[ "${DOMAIN_REP_CHECK}" = true ]]
+then
+    echo "[+] Now calling 'domainReputation.py' to check ${DOMAIN_RECEIVED}"
+    # Note: Python will do the Domain Validation
+    CMDLINE_STR="python3 ${PROJECT_PATH}/domainReputation/domainReputation.py ${DOMAIN_RECEIVED}"
+    OUTPUT=$(eval "$CMDLINE_STR")
+    echo "${OUTPUT}"
+    echo ""
+fi
+
+
 # ET Signature Format check using regex
-echo "You've asked to check ET Signature: ${ET_RECEIVED}"
+echo "[+] You've asked to check ET Signature: ${ET_RECEIVED}"
 echo ''
 
-# Note: Python will do the IPv4 Validation
-echo "Now calling IP Reputation Checker ..."
-CMDLINE_STR="python3 ${PROJECT_PATH}/ipReputation/ipReputation.py ${IP_RECEIVED}"
-OUTPUT=$(eval "$CMDLINE_STR")
-echo "${OUTPUT}"
-
-echo "Now calling Domain Reputation Checker ..."
-CMDLINE_STR="python3 ${PROJECT_PATH}/domainReputation/domainReputation.py ${DOMAIN_RECEIVED}"
-OUTPUT=$(eval "$CMDLINE_STR")
-echo "${OUTPUT}"
