@@ -1,4 +1,6 @@
-import sys,re,json,dns.resolver
+import sys,re,json
+
+import dns.resolver
 from bs4 import BeautifulSoup
 
 import requests
