@@ -1,5 +1,6 @@
-import sys,re,os
+import sys,re,os,time
 
+import selenium
 from pyvirtualdisplay import Display
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -9,22 +10,57 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 #   ([a-zA-Z0-9-_]+\.)*
 #   [a-zA-Z0-9][a-zA-Z0-9-_]+\.
 #   [a-zA-Z]{2,11}?$
+from selenium.webdriver.common.keys import Keys
+
 domain_regex="^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}?$"
 
-def seleniumDomainReputation():
-    # Call Cisco Talos Intelligence
 
-    display = Display(visible=0, size=(1024, 768))
-    display.start()
+def seleniumDomainReputation(domain):
 
-    print('[+] Now calling Cisco Talos Intelligence')
-    cap = DesiredCapabilities().FIREFOX
-    cap["marionette"] = True
-    myBrowser = webdriver.Firefox(capabilities=cap, executable_path="/usr/bin/geckodriver")
-    #myBrowser = webdriver.Firefox(capabilities=cap, executable_path="C:\Windows\System32\geckodriver.exe")
-    myBrowser.get('https://www.talosintelligence.com/reputation_center')
-    #myBrowser.close()
-    #display.stop()
+    try:
+        URL1='https://www.virustotal.com/#/home/search'
+        URL2='https://www.talosintelligence.com/reputation_center/lookup?search=' + domain
+        myBrowser = webdriver.Chrome('/usr/local/bin/chromedriver')
+
+        # ==========
+        # VirusTotal
+        print('[+] Now calling VirusTotal')
+        myBrowser.get(URL1);
+        searchElem = myBrowser.find_element_by_css_selector('div.iron-selected > vt-omnibar:nth-child(2) > div:nth-child(1) > span:nth-child(1) > input:nth-child(1)')
+        searchElem.send_keys(domain)
+        # searchElem.submit()
+        time.sleep(1)
+        clickElem = myBrowser.find_element_by_css_selector('div.iron-selected > vt-omnibar:nth-child(2) > div:nth-child(1) > span:nth-child(1) > paper-icon-button:nth-child(3) > iron-icon:nth-child(1)')
+        clickElem.click()
+
+        # ===========
+        # Cisco Talos
+        # Opening a New Tab for Chrome
+        print('[+] Now calling Cisco Talos Intelligence')
+        myScript = 'window.open("' + URL2 + '");'
+        myBrowser.execute_script(myScript)
+
+        time.sleep(20)  # Let the user actually see something!
+        myBrowser.close()
+
+        # Call Cisco Talos Intelligence
+
+
+        # Firefox
+        # display = Display(visible=0, size=(1024, 768))
+        # display.start()
+        # cap = DesiredCapabilities().FIREFOX
+        # cap["marionette"] = False
+        # myBrowser = webdriver.Firefox(capabilities=cap, executable_path="C:\Windows\System32\geckodriver.exe")
+        # myBrowser = webdriver.Firefox(capabilities=cap, executable_path="/usr/local/bin/geckodriver")
+        # myBrowser.get('https://www.talosintelligence.com/reputation_center')
+        # myBrowser.quit()
+        # display.stop()
+    except selenium.common.exceptions.NoSuchElementException:
+        print("Error: Unable to locate element. Please re-try...")
+    except selenium.common.exceptions.NoSuchWindowException:
+        print("Warning: Target window already closed...")
+
 
 if __name__ == '__main__':
     try:
@@ -43,7 +79,7 @@ if __name__ == '__main__':
             print(process.read())
             process.close()
             # Call Selenium
-            seleniumDomainReputation()
+            seleniumDomainReputation(sys.argv[1])
         else:
             print('[-] Warning: Please type a valid Domain.')
     except IndexError:
