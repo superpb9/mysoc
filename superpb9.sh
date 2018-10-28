@@ -2,10 +2,10 @@
 
 # Windows 10 Environment
 # pythonEXE="/mnt/c/Users/superpb9/AppData/Local/Programs/Python/Python37/python.exe"
-# PROJECT_PATH="/mnt/c/Users/superpb9/iCloudDrive/Documents/myProject/mysoc/"
+PROJECT_PATH="/mnt/c/Users/superpb9/iCloudDrive/Documents/myProject/mysoc/"
 
 # Mac OSX Environment
-PROJECT_PATH="/Users/pippo-mbp2016/mysoc_clone"
+# PROJECT_PATH="/Users/pippo-mbp2016/mysoc_clone"
 
 # Define a usage() function
 usage (){

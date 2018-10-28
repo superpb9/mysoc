@@ -380,13 +380,17 @@ def ipReputationChecker():
     print(message)
 
 
-if __name__ == '__main__':
+def main():
     try:
         re_ip = re.compile(ip_regex)
         if re_ip.match(sys.argv[1]):
-            print('[+] IP Regex successful matches ...')
+            # print('[+] IP Regex successful matches ...')
             ipReputationChecker()
         else:
-            print('[-] Warning: Please type a valid IPv4 address.')
+            print('[-] WARNING: Please type a valid IPv4 address.')
     except IndexError:
-        print("[-] Error: List index out of range")
+        print("[-] ERROR: List index out of range")
+
+
+if __name__ == '__main__':
+    main()

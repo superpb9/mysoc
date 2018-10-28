@@ -20,31 +20,42 @@ def seleniumDomainReputation(domain):
     try:
         URL1='https://www.virustotal.com/#/home/search'
         URL2='https://www.talosintelligence.com/reputation_center/lookup?search=' + domain
-        myBrowser = webdriver.Chrome('/usr/local/bin/chromedriver')
+        # Mac
+        # myBrowser = webdriver.Chrome('/usr/local/bin/chromedriver')
+        # Windows
+        myBrowser = webdriver.Chrome('/mnt/c/Windows/System32/chromedriver.exe')
 
         # ==========
         # VirusTotal
         print('[+] Now calling VirusTotal')
         myBrowser.get(URL1);
+        time.sleep(2)
         searchElem = myBrowser.find_element_by_css_selector('div.iron-selected > vt-omnibar:nth-child(2) > div:nth-child(1) > span:nth-child(1) > input:nth-child(1)')
         searchElem.send_keys(domain)
         # searchElem.submit()
-        time.sleep(1)
+        time.sleep(2)
         clickElem = myBrowser.find_element_by_css_selector('div.iron-selected > vt-omnibar:nth-child(2) > div:nth-child(1) > span:nth-child(1) > paper-icon-button:nth-child(3) > iron-icon:nth-child(1)')
         clickElem.click()
 
         # ===========
         # Cisco Talos
-        # Opening a New Tab for Chrome
+        # Opening a New Tab in Chrome
         print('[+] Now calling Cisco Talos Intelligence')
         myScript = 'window.open("' + URL2 + '");'
         myBrowser.execute_script(myScript)
+        time.sleep(2)  # Let the user actually see something!
 
-        time.sleep(20)  # Let the user actually see something!
-        myBrowser.close()
+        
+
+
+
+
+
+
+
+        myBrowser.quite()
 
         # Call Cisco Talos Intelligence
-
 
         # Firefox
         # display = Display(visible=0, size=(1024, 768))
@@ -56,6 +67,7 @@ def seleniumDomainReputation(domain):
         # myBrowser.get('https://www.talosintelligence.com/reputation_center')
         # myBrowser.quit()
         # display.stop()
+
     except selenium.common.exceptions.NoSuchElementException:
         print("Error: Unable to locate element. Please re-try...")
     except selenium.common.exceptions.NoSuchWindowException:
