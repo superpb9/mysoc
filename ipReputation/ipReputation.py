@@ -370,8 +370,12 @@ def ipReputationChecker():
     # Call xforceIBM.py
     myXForcePrint4 = myXForceChecker("https://api.xforce.ibmcloud.com/ipr/" + sys.argv[1])
 
-    message = "[+] IP Reputation Checking Result\n" +\
-              "<><><> IPVoid | SANS | AbuseIPDB | xForce <><><>\n" +\
+    message = "****************************************\n" +\
+              "****     IP Reputation Checking     ****\n" +\
+              "**** [IPVoid|SANS|AbuseIPDB|xForce] ****\n" +\
+              "****************************************\n"
+    message = message + \
+              "[+] IP Reputation Result" + '\n' +\
               "IPVoid Result: " + myIPvoidPrint1 + '\n' +\
               "SANS Result: " + ' | '.join(mySansPrint2) + '\n' +\
               "AbuseIPDB Result: " + myAbuseIPDBPrint3 + '\n' +\

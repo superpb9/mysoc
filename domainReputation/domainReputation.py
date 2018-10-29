@@ -25,7 +25,7 @@ def browserStatusCheck(myBrowser):
         try:
             # It will return 'True' is Web Browser remains opened ..
             myBrowser.title
-            time.sleep(1)
+            time.sleep(0.5)
         except WebDriverException as w:
             print(w)
             break
@@ -73,9 +73,13 @@ if __name__ == '__main__':
         if re_domain.match(sys.argv[1]):
             # ****** Step 1: Call Linux DIG ******
             # For Linux & Mac Platform
+            print("***************************************\n"
+                  "***    Domain Reputation Checking   ***\n"
+                  "****    Powered by DIG|Selenium    ****\n"
+                  "***************************************")
+
             if "Windows" not in SYSTEM_PLATFORM:
-                print("[+] Domain Reputation Checking Result\n"
-                      "<><><> Linux DIG Answer Section <><><>")
+                print("[+] Linux DIG Answer Section")
                 # os.system('dig %s @8.8.8.8 +noall +answer | grep -Ev \'\^\$\' | grep -Ev "^; <<>>" | grep -Ev ";; global"' %(sys.argv[1]))
                 process = os.popen('dig %s @8.8.8.8 ANY +noall +answer'
                                    '| grep -Ev "^;"'
@@ -92,8 +96,7 @@ if __name__ == '__main__':
                 process.close()
             else:
                 # For Windows Platform
-                print("[+] Domain Reputation Checking Result\n"
-                      "<><><> Windows DIG Answer Section <><><>")
+                print("[+] Windows DIG Answer Section")
                 process = os.popen('"C:\\Program Files\\dig\\bin\\dig" %s @8.8.8.8 ANY +noall +answer'
                                    '| findstr /v "^;"'
                                    '| findstr /v ";;"'
@@ -109,8 +112,7 @@ if __name__ == '__main__':
                 process.close()
 
             # ****** Step 2: Call Selenium ******
-            print("<><><> Selenium is working on it <><><>\n"
-                  "... ...\n")
+            print("[+] Please check your web browser\n")
             seleniumDomainReputation(sys.argv[1])
         else:
             print('[-] WARNING: Please type a valid Domain.')

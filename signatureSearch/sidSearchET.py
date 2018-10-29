@@ -12,7 +12,7 @@ def browserStatusCheck(myBrowser):
         try:
             # It will return 'True' is Web Browser remains opened ..
             myBrowser.title
-            time.sleep(1)
+            time.sleep(0.5)
         except WebDriverException as w:
             print(w)
             break
@@ -41,9 +41,11 @@ if __name__ == '__main__':
         if re_signature.match(sys.argv[1]):
             # Call ET(Snort) Web Searcher
             print("\n"
-                  "[+] ET(Snort) Signature Checking Result\n"
-                  "<><><> Selenium is working on it <><><>\n"
-                  "... ...\n")
+                  "***************************************\n"
+                  "**** ET (Snort) Signature Checking ****\n"
+                  "****       Powered by Selenium     ****\n"
+                  "***************************************\n"
+                  "[+] Please check your web browser ...\n")
             seleniumSignatureSearch()
         else:
             print('[-] WARNING: Please type a valid Signature.')

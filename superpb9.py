@@ -81,7 +81,7 @@ def myGetOpt(myFilePath):
                         p.stdout.close()
                         p.kill()
                         '''
-                        print("<><><> IP Whois Result <><><>")
+                        print("[+] IP Whois Result")
                         subprocess.call([PYTHON_EXEC_FORMAT, 'ipWhois.py', ip])
                         # Change the Path back to SYSTEM Default
                         os.chdir(owd)
