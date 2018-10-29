@@ -1,9 +1,12 @@
+import platform
 import sys,re,os,time
 
 import selenium
-from pyvirtualdisplay import Display
 from selenium import webdriver
+from pyvirtualdisplay import Display
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.remote.command import Command
 
 # Domain Validation with Regex
 #  ^(?!:\/\/)
@@ -15,72 +18,70 @@ from selenium.webdriver.common.keys import Keys
 domain_regex="^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}?$"
 
 
+def browserStatusCheck(myBrowser):
+    for i in range(180):
+        try:
+            # It will return 'True' is Web Browser remains opened ..
+            myBrowser.title
+            time.sleep(1)
+        except WebDriverException as w:
+            print(w)
+            break
+
+
+
 def seleniumDomainReputation(domain):
 
     try:
         URL1='https://www.virustotal.com/#/home/search'
         URL2='https://www.talosintelligence.com/reputation_center/lookup?search=' + domain
-        # Mac
-        # myBrowser = webdriver.Chrome('/usr/local/bin/chromedriver')
-        # Windows
-        myBrowser = webdriver.Chrome('/mnt/c/Windows/System32/chromedriver.exe')
 
-        # ==========
-        # VirusTotal
-        print('[+] Now calling VirusTotal')
+        systemPlatform = platform.system()
+        if "Windows" in systemPlatform:
+            myBrowser = webdriver.Chrome('/mnt/c/Windows/System32/chromedriver.exe')
+        elif "Darwin" in systemPlatform:
+            myBrowser = webdriver.Chrome('/usr/local/bin/chromedriver')
+        elif "Linux" in systemPlatform:
+            myBrowser = webdriver.Chrome('/usr//bin/chromedriver')
+
+        '''
+        try:
+            myBrowser.title
+            print(True)
+        except WebDriverException:
+            print(False)
+        '''
+
+        #  # ******* Tab 1: VirusTotal *******
         myBrowser.get(URL1);
-        time.sleep(2)
+        time.sleep(4)
         searchElem = myBrowser.find_element_by_css_selector('div.iron-selected > vt-omnibar:nth-child(2) > div:nth-child(1) > span:nth-child(1) > input:nth-child(1)')
         searchElem.send_keys(domain)
         # searchElem.submit()
-        time.sleep(2)
+        time.sleep(3)
         clickElem = myBrowser.find_element_by_css_selector('div.iron-selected > vt-omnibar:nth-child(2) > div:nth-child(1) > span:nth-child(1) > paper-icon-button:nth-child(3) > iron-icon:nth-child(1)')
         clickElem.click()
 
-        # ===========
-        # Cisco Talos
-        # Opening a New Tab in Chrome
-        print('[+] Now calling Cisco Talos Intelligence')
+        # ******* Tab 2: Cisco Talos *******
         myScript = 'window.open("' + URL2 + '");'
         myBrowser.execute_script(myScript)
-        time.sleep(2)  # Let the user actually see something!
 
-        
-
-
-
-
-
-
-
-        myBrowser.quite()
-
-        # Call Cisco Talos Intelligence
-
-        # Firefox
-        # display = Display(visible=0, size=(1024, 768))
-        # display.start()
-        # cap = DesiredCapabilities().FIREFOX
-        # cap["marionette"] = False
-        # myBrowser = webdriver.Firefox(capabilities=cap, executable_path="C:\Windows\System32\geckodriver.exe")
-        # myBrowser = webdriver.Firefox(capabilities=cap, executable_path="/usr/local/bin/geckodriver")
-        # myBrowser.get('https://www.talosintelligence.com/reputation_center')
-        # myBrowser.quit()
-        # display.stop()
+        browserStatusCheck(myBrowser)
+        myBrowser.quit()
 
     except selenium.common.exceptions.NoSuchElementException:
-        print("Error: Unable to locate element. Please re-try...")
+        print("[-] ERROR: Unable to locate element. Please re-try...")
     except selenium.common.exceptions.NoSuchWindowException:
-        print("Warning: Target window already closed...")
+        print("[-] WARNING: Target window already closed...")
 
 
 if __name__ == '__main__':
     try:
         re_domain = re.compile(domain_regex)
         if re_domain.match(sys.argv[1]):
-            print('[+] Domain Regex successful matches ...')
-            print('[+] Linux DIG Answer Section')
-            # Call Linux DIG
+            # ****** Step 1: Call Linux DIG ******
+            print("[+] Domain Reputation Checking Result\n"
+                  "<><><> Linux DIG Answer Section <><><>")
             #os.system('dig %s @8.8.8.8 +noall +answer | grep -Ev \'\^\$\' | grep -Ev "^; <<>>" | grep -Ev ";; global"' %(sys.argv[1]))
             process = os.popen('dig %s @8.8.8.8 ANY +noall +answer'
                                '| grep -Ev "^;"'
@@ -88,11 +89,19 @@ if __name__ == '__main__':
                                '| grep -Ev \'^$\''
                                '| sort -k4'
                                %(sys.argv[1]))
-            print(process.read())
+            lines = process.readlines()
+            for line in lines:
+                # Exclusive an empty line using strip()
+                line = line.strip()
+                if line:
+                    print(line)
             process.close()
-            # Call Selenium
+
+            # ****** Step 2: Call Selenium ******
+            print("<><><> Selenium is working on it <><><>\n"
+                  "... ...\n")
             seleniumDomainReputation(sys.argv[1])
         else:
-            print('[-] Warning: Please type a valid Domain.')
+            print('[-] WARNING: Please type a valid Domain.')
     except IndexError:
-        print("[-] Error: List index out of range")
+        print("[-] ERROR: List index out of range")
