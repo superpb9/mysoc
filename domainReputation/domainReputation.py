@@ -1,5 +1,7 @@
 import platform
 import sys,re,os,time
+import subprocess
+import shlex
 
 import selenium
 from selenium import webdriver
@@ -16,7 +18,7 @@ from selenium.webdriver.remote.command import Command
 from selenium.webdriver.common.keys import Keys
 
 domain_regex="^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}?$"
-
+SYSTEM_PLATFORM = platform.system()
 
 def browserStatusCheck(myBrowser):
     for i in range(180):
@@ -29,28 +31,18 @@ def browserStatusCheck(myBrowser):
             break
 
 
-
 def seleniumDomainReputation(domain):
 
     try:
         URL1='https://www.virustotal.com/#/home/search'
         URL2='https://www.talosintelligence.com/reputation_center/lookup?search=' + domain
 
-        systemPlatform = platform.system()
-        if "Windows" in systemPlatform:
-            myBrowser = webdriver.Chrome('/mnt/c/Windows/System32/chromedriver.exe')
-        elif "Darwin" in systemPlatform:
+        if "Windows" in SYSTEM_PLATFORM:
+            myBrowser = webdriver.Chrome('C:\Windows\System32\chromedriver.exe')
+        elif "Darwin" in SYSTEM_PLATFORM:
             myBrowser = webdriver.Chrome('/usr/local/bin/chromedriver')
-        elif "Linux" in systemPlatform:
+        elif "Linux" in SYSTEM_PLATFORM:
             myBrowser = webdriver.Chrome('/usr//bin/chromedriver')
-
-        '''
-        try:
-            myBrowser.title
-            print(True)
-        except WebDriverException:
-            print(False)
-        '''
 
         #  # ******* Tab 1: VirusTotal *******
         myBrowser.get(URL1);
@@ -80,22 +72,41 @@ if __name__ == '__main__':
         re_domain = re.compile(domain_regex)
         if re_domain.match(sys.argv[1]):
             # ****** Step 1: Call Linux DIG ******
-            print("[+] Domain Reputation Checking Result\n"
-                  "<><><> Linux DIG Answer Section <><><>")
-            #os.system('dig %s @8.8.8.8 +noall +answer | grep -Ev \'\^\$\' | grep -Ev "^; <<>>" | grep -Ev ";; global"' %(sys.argv[1]))
-            process = os.popen('dig %s @8.8.8.8 ANY +noall +answer'
-                               '| grep -Ev "^;"'
-                               '| grep -Ev ";;"'
-                               '| grep -Ev \'^$\''
-                               '| sort -k4'
-                               %(sys.argv[1]))
-            lines = process.readlines()
-            for line in lines:
-                # Exclusive an empty line using strip()
-                line = line.strip()
-                if line:
-                    print(line)
-            process.close()
+            # For Linux & Mac Platform
+            if "Windows" not in SYSTEM_PLATFORM:
+                print("[+] Domain Reputation Checking Result\n"
+                      "<><><> Linux DIG Answer Section <><><>")
+                # os.system('dig %s @8.8.8.8 +noall +answer | grep -Ev \'\^\$\' | grep -Ev "^; <<>>" | grep -Ev ";; global"' %(sys.argv[1]))
+                process = os.popen('dig %s @8.8.8.8 ANY +noall +answer'
+                                   '| grep -Ev "^;"'
+                                   '| grep -Ev ";;"'
+                                   '| grep -Ev \'^$\''
+                                   '| sort -k4'
+                                   % (sys.argv[1]))
+                lines = process.readlines()
+                for line in lines:
+                    # Exclusive an empty line using strip()
+                    line = line.strip()
+                    if line:
+                        print(line)
+                process.close()
+            else:
+                # For Windows Platform
+                print("[+] Domain Reputation Checking Result\n"
+                      "<><><> Windows DIG Answer Section <><><>")
+                process = os.popen('"C:\\Program Files\\dig\\bin\\dig" %s @8.8.8.8 ANY +noall +answer'
+                                   '| findstr /v "^;"'
+                                   '| findstr /v ";;"'
+                                   '| findstr /v \'^$\''
+                                   '| sort /+4'
+                                   % (sys.argv[1]))
+                lines = process.readlines()
+                for line in lines:
+                    # Exclusive an empty line using strip()
+                    line = line.strip()
+                    if line:
+                        print(line)
+                process.close()
 
             # ****** Step 2: Call Selenium ******
             print("<><><> Selenium is working on it <><><>\n"

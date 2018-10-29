@@ -25,7 +25,7 @@ def seleniumSignatureSearch():
 
     systemPlatform = platform.system()
     if "Windows" in systemPlatform:
-        myBrowser = webdriver.Chrome('/mnt/c/Windows/System32/chromedriver.exe')
+        myBrowser = webdriver.Chrome('C:\Windows\System32\chromedriver.exe')
     elif "Darwin" in systemPlatform:
         myBrowser = webdriver.Chrome('/usr/local/bin/chromedriver')
     elif "Linux" in systemPlatform:

@@ -2,8 +2,7 @@
 import multiprocessing
 import os, platform, re
 import sys, getopt, subprocess
-from multiprocessing import Process
-
+from multiprocessing import Process, freeze_support
 from selenium import webdriver
 
 
@@ -64,7 +63,7 @@ def myGetOpt(myFilePath):
             # IP Reputation Check #
             #######################
             if opt_name in ('-i', '--IPv4'):
-                def run_proc(name):
+                def run_proc1():
                     # print("[*] Current Child process ---- %s (%s)..." % (name, os.getpid()))
                     ip = opt_value
                     re_ip = re.compile(ip_regex)
@@ -94,7 +93,8 @@ def myGetOpt(myFilePath):
                 # Parent Process Running Block
                 # print('[*] Current Parent process ---- %s.' % os.getpid())
                 # Call the Child Process Running Block above
-                p = Process(target=run_proc, args=('test',))
+                p = Process(target=run_proc1)
+                #p = Process(target=run_proc(), args=('test1',))
                 p.start()
                 # Note: We don't want to wait for Parent Process; Otherwise, please use p.join()
                 # p.join()
@@ -106,7 +106,7 @@ def myGetOpt(myFilePath):
                 # ************************* #
                 # Child Process Running Block
                 # Use Child Process to do Domain Reputation Check
-                def run_proc(name):
+                def run_proc2():
                     # print("[*] Current Child process ---- %s (%s)..." % (name, os.getpid()))
                     domain = opt_value
                     re_domain = re.compile(domain_regex)
@@ -127,7 +127,9 @@ def myGetOpt(myFilePath):
                 # Parent Process Running Block
                 # print('[*] Current Parent process ---- %s.' % os.getpid())
                 # Call the Child Process Running Block above
-                p = Process(target=run_proc, args=('test',))
+                freeze_support()
+                p = Process(target=run_proc2)
+                #p = Process(target=run_proc, args=('test2',))
                 p.start()
                 # Note: We don't want to wait for Parent Process; Otherwise, please use p.join()
                 # p.join()
@@ -139,7 +141,7 @@ def myGetOpt(myFilePath):
             elif opt_name in ('-s', '--Signature'):
                 # ************************* #
                 # Use Child Process to do ET(Snort) Check
-                def run_proc(name):
+                def run_proc3():
                     # print("[*] Current Child process ---- %s (%s)..." % (name, os.getpid()))
                     signature = opt_value
                     re_signature = re.compile(sid_regex)
@@ -160,7 +162,8 @@ def myGetOpt(myFilePath):
                 # Parent Process Running Block
                 # print('[*] Current Parent process ---- %s.' % os.getpid())
                 # Call the Child Process Running Block above
-                p = Process(target=run_proc, args=('test',))
+                p = Process(target=run_proc3)
+                #p = Process(target=run_proc, args=('test3',))
                 p.start()
                 # Note: We don't want to wait for Parent Process; Otherwise, please use p.join()
                 # p.join()
@@ -182,6 +185,7 @@ if __name__ == "__main__":
             myFilePath = MAC_PROJECT_PATH
 
         # Call getopt
+        freeze_support()
         myGetOpt(myFilePath)
 
     except IndexError:
