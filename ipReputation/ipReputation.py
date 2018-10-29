@@ -361,9 +361,6 @@ def myXForceChecker(url):
 
 def ipReputationChecker():
 
-    # Call myIPwhois.py
-    #myIPwhois.IPWhoisChecker("https://www.abuseipdb.com/whois/" + sys.argv[1])
-
     # Call ipvoid.py
     myIPvoidPrint1 = ipvoidChecker(sys.argv[1])
     # Call sans.py
@@ -373,12 +370,13 @@ def ipReputationChecker():
     # Call xforceIBM.py
     myXForcePrint4 = myXForceChecker("https://api.xforce.ibmcloud.com/ipr/" + sys.argv[1])
 
-    message = "[.] IPVoid Result: " + myIPvoidPrint1 + '\n' +\
-              "[.] SANS Result: " + ' | '.join(mySansPrint2) + '\n' +\
-              "[.] AbuseIPDB Result: " + myAbuseIPDBPrint3 + '\n' +\
-              "[.] XForce Result:  " + ' | '.join(myXForcePrint4)
+    message = "[+] IP Reputation Checking Result\n" +\
+              "<><><> IPVoid | SANS | AbuseIPDB | xForce <><><>\n" +\
+              "IPVoid Result: " + myIPvoidPrint1 + '\n' +\
+              "SANS Result: " + ' | '.join(mySansPrint2) + '\n' +\
+              "AbuseIPDB Result: " + myAbuseIPDBPrint3 + '\n' +\
+              "XForce Result:  " + ' | '.join(myXForcePrint4)
     print(message)
-
 
 def main():
     try:
