@@ -5,7 +5,6 @@ import sys, getopt, subprocess
 from multiprocessing import Process, freeze_support
 from selenium import webdriver
 
-
 # Windows 10 Environment
 # pythonEXE="/mnt/c/Users/superpb9/AppData/Local/Programs/Python/Python37/python.exe"
 
@@ -13,7 +12,7 @@ PLATFORM = platform.system()
 PYTHON_EXEC_FORMAT = ""
 
 WIN_PROJECT_PATH = "C:\\Users\\superpb9\\iCloudDrive\\Documents\\myProject\\mysoc\\"
-LINUX_PROJECT_PATH = "/mnt/c/Users/superpb9/iCloudDrive/Documents/myProject/mysoc/"
+LINUX_PROJECT_PATH = "/user/pippo/mysoc/"
 MAC_PROJECT_PATH = "/Users/pippo-mbp2016/mysoc_clone"
 
 ip_regex = "^(?:(?:1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|[1-9])\.)(?:(?:1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)\.){2}(?:1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)$"
@@ -86,8 +85,7 @@ def myGetOpt(myFilePath):
                         # Change the Path back to SYSTEM Default
                         os.chdir(owd)
                     else:
-                        print('[-] WARNING: Please type a valid IPv4 address. \n'
-                              '[-] Program will exit ...')
+                        print('[-] WARNING: Please type a valid IPv4 address.')
                         exit()
                 # ************************* #
                 # Parent Process Running Block
@@ -120,8 +118,7 @@ def myGetOpt(myFilePath):
                         # Change the Path back to SYSTEM Default
                         os.chdir(owd)
                     else:
-                        print('[-] WARNING: Please type a valid Domain. \n'
-                              '[-] Program will exit ...')
+                        print('[-] WARNING: Please type a valid Domain.')
                         exit()
                 # ************************* #
                 # Parent Process Running Block
@@ -155,8 +152,7 @@ def myGetOpt(myFilePath):
                         # Change the Path back to SYSTEM Default
                         os.chdir(owd)
                     else:
-                        print('[-] WARNING: Please type a valid signature. \n'
-                              '[-] Program will exit ...')
+                        print('[-] WARNING: Please type a valid signature.')
                         exit()
                 # ************************* #
                 # Parent Process Running Block
@@ -169,8 +165,7 @@ def myGetOpt(myFilePath):
                 # p.join()
 
     except getopt.GetoptError as g:
-        print('[-] ERROR: ' + str(g) + '\n'
-              '[-] Program will exit ...')
+        print('[-] ERROR: ' + str(g) + '\n')
 
 
 if __name__ == "__main__":
@@ -185,7 +180,6 @@ if __name__ == "__main__":
             myFilePath = MAC_PROJECT_PATH
 
         # Call getopt
-        freeze_support()
         myGetOpt(myFilePath)
 
     except IndexError:
