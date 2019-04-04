@@ -287,8 +287,8 @@ def abuseipdbChecker(url):
 
 def myXForceChecker(url):
 
-    # User: 473284ee-2c45-4719-a201-5e6c81c0253a
-    # Password: 8acd0774-7238-4ad7-bc09-a2003ca6e80f
+    # User: 473284xx-2c45-4719-axxx-5e6c81c0253a
+    # Password: 8acd07xx-7238-4ad7-bxxx-a2003ca6e80f
 
     # Auth first
     #print ('')
@@ -297,8 +297,8 @@ def myXForceChecker(url):
     printResult = []
     # e.g. url = "https://exchange.xforce.ibmcloud.com/ip//114.200.4.207"
     # IP Report
-    myResult1 = requests.get(url, auth=HTTPBasicAuth('473284ee-2c45-4719-a201-5e6c81c0253a',
-                                                     '8acd0774-7238-4ad7-bc09-a2003ca6e80f'))
+    myResult1 = requests.get(url, auth=HTTPBasicAuth('473284xx-2c45-4719-axxx-5e6c81c0253a',
+                                                     '8acd07xx-7238-4ad7-bxxx-a2003ca6e80f'))
     c1 = myResult1.content
     myJson1 = json.loads(c1)
 
