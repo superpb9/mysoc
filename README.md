@@ -1,2 +1,1 @@
-# mysoc tools all-in-one
-# Powered by Selenium
+# IP/Domain/Snort Signature Check All-In-One - Powered by Selenium
